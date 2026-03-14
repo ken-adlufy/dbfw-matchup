@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FB09 DUAL EVOLUTION — マッチアップ完全版</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0b0b12;color:#e0dff2;font-family:"Hiragino Kaku Gothic Pro","Meiryo",sans-serif;min-height:100vh}
+.page{max-width:1000px;margin:0 auto;padding:16px 12px}
+h1{font-size:15px;font-weight:700;letter-spacing:.05em;margin-bottom:2px}
+.sub{font-size:9px;color:#52516a;margin-bottom:12px}
+.tabs{display:flex;gap:4px;margin-bottom:14px}
+.tab{padding:7px 20px;border-radius:6px;border:1px solid #28283a;background:#13131e;color:#9090b8;font-size:12px;cursor:pointer;font-weight:600;transition:all .15s}
+.tab.on{background:#3a2f7a;color:#d0c8ff;border-color:#5a4faa}
+.panel{display:none}.panel.on{display:block}
+.leg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.lp{padding:3px 11px;border-radius:5px;font-size:11px;font-weight:600;border:1px solid transparent}
+/* TABLE */
+.tscroll{overflow-x:auto;border-radius:10px;border:1px solid #20202e}
+table{border-collapse:collapse;min-width:820px;width:100%}
+th.corner{background:#0c0c18;font-size:9px;padding:8px 10px;text-align:left;vertical-align:bottom;color:#52516a;min-width:100px;border:none}
+th.ch{font-size:9px;padding:8px 4px;text-align:center;vertical-align:bottom;line-height:1.6;border:1px solid #1a1a28}
+th.new-h{background:#0f0f20}
+th.old-h{background:#0c0c18}
+th.sc-h{font-size:9px;font-weight:600;padding:8px 5px;text-align:center;background:#0c0c18;border:1px solid #1a1a28;color:#6060a0;vertical-align:bottom;min-width:50px}
+.dot{width:9px;height:9px;border-radius:50%;display:block;margin:0 auto 3px}
+.star{font-size:8px;color:#6699ff;font-weight:700;display:block;margin-top:1px}
+td{border:1px solid #1a1a28;text-align:center;font-size:15px;font-weight:600;height:40px;width:56px}
+td.rh{text-align:left;padding:6px 10px;font-size:11px;white-space:nowrap;font-weight:600;background:#0c0c18;border:1px solid #1a1a28;min-width:100px}
+td.rh-n{background:#0f0f20;color:#c0c0e8}
+td.rh-o{color:#8888aa}
+td.cs{background:#0d2a06;color:#88ee44}
+td.ca{background:#06122e;color:#66aaff}
+td.ce{background:#111120;color:#505078;font-size:13px}
+td.cd{background:#2c1600;color:#ffaa44}
+td.cx{background:#2c0606;color:#ff5555;font-size:18px}
+td.cm{background:#0c0c18;color:#2a2a3a;font-size:11px}
+td.sc{font-weight:700;font-size:13px;text-align:center;background:#0c0c18;border:1px solid #1a1a28}
+tr.div-row td{height:4px;background:#20202e;border:none;padding:0}
+tr:hover td:not(.rh):not(.sc):not(.cm){filter:brightness(1.3)}
+.tnote{font-size:9px;color:#3a3a55;margin-top:8px;line-height:1.9}
+/* DIAGRAM */
+.dleg{display:flex;flex-wrap:wrap;gap:10px;font-size:10px;color:#8888aa;margin-bottom:8px;align-items:center}
+.dli{display:flex;align-items:center;gap:5px}
+svg{display:block;width:100%;height:auto}
+.dnote{font-size:9px;color:#3a3a55;margin-top:7px;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>FB09「DUAL EVOLUTION」マッチアップ完全版</h1>
+<p class="sub">2026/3/14 理論値＋プレイヤー読み暫定版　★＝FB09新リーダー　スコア＝◎×2 ○×1 ▲×-1 ××-2　逆算値含む</p>
+<div class="tabs">
+  <button class="tab on" onclick="sw('table')">📋 マッチアップ表</button>
+  <button class="tab" onclick="sw('diagram')">🔗 相関図</button>
+</div>
+
+<div class="panel on" id="panel-table">
+<div class="leg">
+  <div class="lp" style="background:#0d2a06;color:#88ee44;border-color:#336611">◎ 有利</div>
+  <div class="lp" style="background:#06122e;color:#66aaff;border-color:#224488">○ 微有利</div>
+  <div class="lp" style="background:#111120;color:#6868a0;border-color:#303050">△ 五分</div>
+  <div class="lp" style="background:#2c1600;color:#ffaa44;border-color:#775500">▲ 微不利</div>
+  <div class="lp" style="background:#2c0606;color:#ff5555;border-color:#771111">× 無理</div>
+</div>
+<div class="tscroll"><table id="tbl"></table></div>
+<p class="tnote">◆ 既存リーダー行の新リーダー列は逆算値（新リーダー視点の反転）。<br>◆ スコアは全対面合計。FB09「DUAL EVOLUTION」2026/3/14 暫定版。</p>
+</div>
+
+<div class="panel" id="panel-diagram">
+<div class="dleg">
+  <div class="dli"><svg width="36" height="11" overflow="visible"><line x1="0" y1="5.5" x2="22" y2="5.5" stroke="#44dd66" stroke-width="3"/><polygon points="22,1.5 33,5.5 22,9.5" fill="#44dd66"/></svg>◎ 有利</div>
+  <div class="dli"><svg width="36" height="11" overflow="visible"><line x1="0" y1="5.5" x2="22" y2="5.5" stroke="#44dd66" stroke-width="1.5"/><polygon points="22,2.5 32,5.5 22,8.5" fill="#44dd66"/></svg>○ 微有利</div>
+  <div class="dli"><span style="font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;border:1px solid #334488;color:#6688ff;background:#0a1030">NEW</span>FB09新リーダー</div>
+  <div class="dli" style="font-size:9px;color:#44435a">矢印の色＝有利側カラー　タップでハイライト　左数字＝スコア</div>
+</div>
+<svg id="dsvg" viewBox="0 0 920 700">
+<defs>
+  <marker id="ma" viewBox="0 0 12 8" refX="11" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+    <path d="M0 0L12 4L0 8Z" fill="context-stroke" stroke="none"/>
+  </marker>
+  <marker id="ms" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="5.5" markerHeight="5.5" orient="auto">
+    <path d="M0 0L10 3.5L0 7Z" fill="context-stroke" stroke="none"/>
+  </marker>
+</defs>
+<g id="dcl"></g><g id="del"></g><g id="dnl"></g>
+</svg>
+<p class="dnote">外周＝FB09新リーダー　内周＝既存リーダー　カラーグループ：🔴赤 / 🟡黄 / 🟣紫 / 🔵青 / ⚫黒 / 🟢緑<br>全対面の矢印を収録。FB09「DUAL EVOLUTION」2026/3/14 暫定版。</p>
+</div>
+</div>
+
+<script>
+function sw(t){
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('on',i===(t==='table'?0:1)));
+  document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('on',i===(t==='table'?0:1)));
+}
+
+const ALL=[
+  {id:'rGB',nm:'赤ゴジBR',  dot:'#ff5555',n:1},
+  {id:'yG', nm:'黄ゴジータ',dot:'#ffaa00',n:1},
+  {id:'bM', nm:'青身勝手',  dot:'#5599ff',n:1},
+  {id:'kGG',nm:'黒ゴジGT', dot:'#bbbbbb',n:1},
+  {id:'gBS',nm:'ビースト',  dot:'#44cc66',n:1},
+  {id:'gK3',nm:'悟空3',     dot:'#aa77ff',n:1},
+  {id:'rM', nm:'赤飯',      dot:'#cc4444',n:0},
+  {id:'yBu',nm:'純ブウ',    dot:'#cc8800',n:0},
+  {id:'gP', nm:'オレピ',    dot:'#33aa55',n:0},
+  {id:'kBa',nm:'バダック',  dot:'#888888',n:0},
+  {id:'kJ', nm:'Jr',        dot:'#777777',n:0},
+  {id:'yBe',nm:'黄ベジ',    dot:'#cc7700',n:0},
+];
+
+// Direct input from user JSON
+const RAW={
+  rGB:{yG:'E',bM:'D',kGG:'S',gBS:'E',gK3:'D',rM:'S',yBu:'A',gP:'A',kBa:'S',kJ:'S',yBe:'E'},
+  yG: {rGB:'E',bM:'D',kGG:'D',gBS:'S',gK3:'D',rM:'S',yBu:'S',gP:'S',kBa:'S',kJ:'A',yBe:'D'},
+  bM: {rGB:'A',yG:'A',kGG:'D',gBS:'X',gK3:'D',rM:'S',yBu:'A',gP:'X',kBa:'D',kJ:'D',yBe:'S'},
+  kGG:{rGB:'X',yG:'A',bM:'A',gBS:'X',gK3:'D',rM:'S',yBu:'A',gP:'A',kBa:'S',kJ:'S',yBe:'A'},
+  gBS:{rGB:'E',yG:'X',bM:'S',kGG:'S',gK3:'X',rM:'D',yBu:'E',gP:'S',kBa:'E',kJ:'A',yBe:'D'},
+  gK3:{rGB:'A',yG:'A',bM:'A',kGG:'A',gBS:'S',rM:'S',yBu:'A',gP:'S',kBa:'S',kJ:'S',yBe:'D'},
+  rM: {yBu:'E',gP:'S',kBa:'A',kJ:'A',yBe:'E'},
+  yBu:{rM:'E',gP:'D',kBa:'E',kJ:'E',yBe:'S'},
+  gP: {rM:'X',yBu:'A',kBa:'D',kJ:'A',yBe:'A'},
+  kBa:{rM:'D',yBu:'A',gP:'A',kJ:'D',yBe:'D'},
+  kJ: {rM:'D',yBu:'A',gP:'D',kBa:'A',yBe:'E'},
+  yBe:{rM:'E',yBu:'X',gP:'D',kBa:'A',kJ:'E'},
+};
+
+// Reverse map
+const REV={S:'X',A:'D',E:'E',D:'A',X:'S','-':'-','?':'?'};
+
+// Build full matrix with reverse-inference for missing cells
+const D={};
+ALL.forEach(r=>{
+  D[r.id]={};
+  ALL.forEach(c=>{
+    if(r.id===c.id){D[r.id][c.id]='-';return;}
+    const direct=RAW[r.id]?.[c.id];
+    if(direct){D[r.id][c.id]=direct;return;}
+    // Try reverse inference
+    const opposite=RAW[c.id]?.[r.id];
+    D[r.id][c.id]=opposite?REV[opposite]:'?';
+  });
+});
+
+const SW={S:2,A:1,E:0,D:-1,X:-2,'-':0,'?':0};
+const SYM={S:'◎',A:'○',E:'△',D:'▲',X:'×','-':'—','?':'…'};
+const CL={S:'cs',A:'ca',E:'ce',D:'cd',X:'cx','-':'cm','?':'ce'};
+const sclr=s=>(s>=10?'#66ee88':s>=4?'#44cc66':s>=0?'#ffcc44':'#ff7766');
+function calcSc(rid){return ALL.filter(c=>c.id!==rid).reduce((a,c)=>a+(SW[D[rid][c.id]]||0),0);}
+
+// TABLE
+(function(){
+  let h='<thead><tr><th class="corner">使用↓ / 対面→</th>';
+  ALL.forEach(({nm,dot,n})=>{
+    const pts=nm.match(/.{1,4}/g)||[nm];
+    h+=`<th class="ch ${n?'new-h':'old-h'}">
+      <span class="dot" style="background:${dot}"></span>
+      ${pts.join('<br>')}
+      ${n?'<span class="star">★</span>':''}
+    </th>`;
+  });
+  h+='<th class="sc-h">得点</th></tr></thead><tbody>';
+  ['rGB','yG','bM','kGG','gBS','gK3'].forEach(rid=>{
+    const {nm,dot}=ALL.find(x=>x.id===rid);
+    const sc=calcSc(rid);
+    h+=`<tr><td class="rh rh-n"><span class="dot" style="background:${dot};display:inline-block;vertical-align:middle;margin-right:5px"></span>${nm}</td>`;
+    ALL.forEach(({id})=>{const v=D[rid][id];h+=`<td class="${CL[v]||'ce'}">${SYM[v]||'?'}</td>`;});
+    h+=`<td class="sc" style="color:${sclr(sc)}">${sc>0?'+'+sc:sc}</td></tr>`;
+  });
+  h+=`<tr class="div-row"><td colspan="${ALL.length+2}"></td></tr>`;
+  ['rM','yBu','gP','kBa','kJ','yBe'].forEach(rid=>{
+    const {nm,dot}=ALL.find(x=>x.id===rid);
+    const sc=calcSc(rid);
+    h+=`<tr><td class="rh rh-o"><span class="dot" style="background:${dot};display:inline-block;vertical-align:middle;margin-right:5px;opacity:.7"></span>${nm}</td>`;
+    ALL.forEach(({id})=>{
+      const v=D[rid][id];
+      const inferred=!RAW[rid]?.[id]&&v!=='-'&&v!=='?';
+      h+=`<td class="${CL[v]||'ce'}" style="${inferred?'opacity:.7':''}" title="${inferred?'逆算値':''}">${SYM[v]||'?'}</td>`;
+    });
+    h+=`<td class="sc" style="color:${sclr(sc)}">${sc>0?'+'+sc:sc}</td></tr>`;
+  });
+  h+='</tbody>';
+  document.getElementById('tbl').innerHTML=h;
+})();
+
+// DIAGRAM
+(function(){
+const NS='http://www.w3.org/2000/svg';
+const SVG=document.getElementById('dsvg');
+const DCL=document.getElementById('dcl');
+const DEL=document.getElementById('del');
+const DNL=document.getElementById('dnl');
+const mk=(t,a)=>{const e=document.createElementNS(NS,t);for(const[k,v]of Object.entries(a))e.setAttribute(k,v);return e;};
+
+const CLUSTERS=[
+  {x:68, y:74, w:280,h:208,s:'rgba(255,80,80,0.22)',f:'rgba(255,80,80,0.04)',r:14,lb:'赤'},
+  {x:390,y:36, w:140,h:130,s:'rgba(160,100,255,0.22)',f:'rgba(160,100,255,0.04)',r:14,lb:'紫'},
+  {x:598,y:60, w:300,h:320,s:'rgba(255,170,0,0.22)',f:'rgba(255,170,0,0.04)',r:14,lb:'黄'},
+  {x:26, y:320,w:156,h:152,s:'rgba(80,150,255,0.22)',f:'rgba(80,150,255,0.04)',r:14,lb:'青'},
+  {x:228,y:496,w:454,h:158,s:'rgba(180,180,180,0.18)',f:'rgba(180,180,180,0.03)',r:14,lb:'黒'},
+  {x:638,y:366,w:262,h:274,s:'rgba(60,200,100,0.22)',f:'rgba(60,200,100,0.04)',r:14,lb:'緑'},
+];
+const NODES=[
+  {id:'rGB',x:160,y:162,r:43,c:'#ff5555',n:1},
+  {id:'rM', x:295,y:228,r:30,c:'#cc4444',n:0},
+  {id:'gK3',x:460,y:96, r:47,c:'#aa77ff',n:1},
+  {id:'yG', x:668,y:148,r:43,c:'#ffaa00',n:1},
+  {id:'yBu',x:800,y:238,r:30,c:'#cc8800',n:0},
+  {id:'yBe',x:736,y:332,r:30,c:'#cc7700',n:0},
+  {id:'bM', x:104,y:395,r:43,c:'#5599ff',n:1},
+  {id:'kGG',x:310,y:572,r:43,c:'#bbbbbb',n:1},
+  {id:'kBa',x:468,y:598,r:30,c:'#888888',n:0},
+  {id:'kJ', x:596,y:562,r:30,c:'#777777',n:0},
+  {id:'gBS',x:722,y:448,r:43,c:'#44cc66',n:1},
+  {id:'gP', x:820,y:570,r:30,c:'#33aa55',n:0},
+];
+const NM={};NODES.forEach(n=>NM[n.id]=n);
+
+// Build edges from full matrix — one direction only per pair
+const EDGES=[];
+const seen=new Set();
+ALL.forEach(from=>{
+  ALL.forEach(to=>{
+    if(from.id===to.id)return;
+    const key=[from.id,to.id].sort().join('|');
+    if(seen.has(key))return;
+    seen.add(key);
+    const fv=D[from.id][to.id];
+    const tv=D[to.id][from.id];
+    if(fv==='S'){EDGES.push({f:from.id,t:to.id,w:'a'});}
+    else if(tv==='S'){EDGES.push({f:to.id,t:from.id,w:'a'});}
+    else if(fv==='A'&&(tv==='D'||tv==='X'||tv==='E')){EDGES.push({f:from.id,t:to.id,w:'s'});}
+    else if(tv==='A'&&(fv==='D'||fv==='X'||fv==='E')){EDGES.push({f:to.id,t:from.id,w:'s'});}
+  });
+});
+
+CLUSTERS.forEach(({x,y,w,h,s,f,r,lb})=>{
+  DCL.appendChild(mk('rect',{x,y,width:w,height:h,rx:r,fill:f,stroke:s,'stroke-width':'0.9','stroke-dasharray':'5,4'}));
+  const t=mk('text',{x:x+13,y:y+17,'font-size':'10.5','font-weight':'700',fill:s});
+  t.textContent=lb;DCL.appendChild(t);
+});
+
+const eels=[];
+EDGES.forEach(({f,t,w})=>{
+  const fn=NM[f],tn=NM[t];if(!fn||!tn)return;
+  const dx=tn.x-fn.x,dy=tn.y-fn.y,di=Math.sqrt(dx*dx+dy*dy)||1,ux=dx/di,uy=dy/di;
+  const sx=fn.x+fn.r*ux,sy=fn.y+fn.r*uy;
+  const pad=w==='a'?15:12;
+  const ex=tn.x-(tn.r+pad)*ux,ey=tn.y-(tn.r+pad)*uy;
+  const el=mk('line',{
+    x1:sx.toFixed(1),y1:sy.toFixed(1),x2:ex.toFixed(1),y2:ey.toFixed(1),
+    stroke:fn.c,'stroke-width':w==='a'?2.8:1.5,opacity:w==='a'?'0.72':'0.42',
+    'marker-end':w==='a'?'url(#ma)':'url(#ms)','stroke-linecap':'round'
+  });
+  el.dataset.f=f;el.dataset.t=t;
+  DEL.appendChild(el);eels.push(el);
+});
+
+const nels={};
+NODES.forEach(({id,x,y,r,c,n})=>{
+  const g=mk('g',{cursor:'pointer'});
+  if(n){
+    g.appendChild(mk('circle',{cx:x,cy:y,r:r+14,fill:'none',stroke:c,'stroke-width':'0.4',opacity:'0.12'}));
+    g.appendChild(mk('circle',{cx:x,cy:y,r:r+7, fill:'none',stroke:c,'stroke-width':'0.9',opacity:'0.26'}));
+  }
+  g.appendChild(mk('circle',{cx:x,cy:y,r,fill:c+'22',stroke:c,'stroke-width':n?'2.6':'1.8'}));
+  const {nm}=ALL.find(a=>a.id===id);
+  const pts=nm.match(/.{1,3}/g)||[nm];
+  pts.forEach((l,i)=>{
+    const yo=pts.length>1?(i===0?-7:7):0;
+    const t=mk('text',{x,y:y+yo,'text-anchor':'middle','dominant-baseline':'central',
+      'font-size':n?'11.5':'10','font-weight':n?'700':'500',fill:c,'pointer-events':'none'});
+    t.textContent=l;g.appendChild(t);
+  });
+  if(n){
+    const bx=x+r-1,by=y-r-3;
+    g.appendChild(mk('rect',{x:bx-13,y:by-6,width:26,height:12,rx:3,fill:'#0a1030',stroke:'#334488','stroke-width':'0.8'}));
+    const bt=mk('text',{x:bx,y:by,'text-anchor':'middle','dominant-baseline':'central','font-size':'8',fill:'#6699ff','font-weight':'700','pointer-events':'none'});
+    bt.textContent='NEW';g.appendChild(bt);
+    const sc=calcSc(id);
+    const sbg=sc>=10?'#082008':sc>=4?'#0a2808':sc>=0?'#251800':'#280808';
+    const sfc=sc>=10?'#66ee88':sc>=4?'#44cc66':sc>=0?'#ffcc44':'#ff7766';
+    const sbx=x-r+1,sby=y-r-3;
+    g.appendChild(mk('circle',{cx:sbx,cy:sby,r:11,fill:sbg,stroke:sfc,'stroke-width':'1'}));
+    const st=mk('text',{x:sbx,y:sby,'text-anchor':'middle','dominant-baseline':'central','font-size':'9',fill:sfc,'font-weight':'700','pointer-events':'none'});
+    st.textContent=(sc>0?'+':'')+sc;g.appendChild(st);
+  }
+  DNL.appendChild(g);nels[id]=g;
+  const getOp=e=>parseFloat(e.getAttribute('stroke-width'))>=2?'0.72':'0.42';
+  const hl=()=>{
+    const lk=new Set([id]);
+    eels.forEach(e=>{const h2=e.dataset.f===id||e.dataset.t===id;e.style.opacity=h2?'1':'0.025';if(h2){lk.add(e.dataset.f);lk.add(e.dataset.t);}});
+    Object.entries(nels).forEach(([k,v])=>v.style.opacity=lk.has(k)?'1':'0.07');
+  };
+  const rs=()=>{eels.forEach(e=>e.style.opacity=getOp(e));Object.values(nels).forEach(v=>v.style.opacity='1');};
+  g.addEventListener('mouseenter',hl);g.addEventListener('mouseleave',rs);
+  let touched=false;
+  g.addEventListener('touchstart',ev=>{ev.preventDefault();touched=true;hl();},{passive:false});
+  g.addEventListener('touchend',()=>{setTimeout(()=>{touched=false;},400);});
+  SVG.addEventListener('touchstart',ev=>{if(touched)return;rs();},{passive:true});
+});
+})();
+</script>
+</body>
+</html>
