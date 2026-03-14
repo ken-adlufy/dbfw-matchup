@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FB09 マッチアップ相関図 — DBFW</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0e0e12;--bg2:#16161e;--bg3:#1e1e28;
+  --border:#2a2a38;--text:#e8e6f0;--text2:#9896a8;--text3:#5a5870;
+  --red:#e05555;--redbg:#3a1515;
+  --yellow:#d4922a;--yellowbg:#362010;
+  --blue:#4a8fe8;--bluebg:#0e2240;
+  --black:#9896a8;--blackbg:#1a1a24;
+  --green:#4db87a;--greenbg:#0e2a18;
+  --purple:#9580e8;--purplebg:#1e1640;
+}
+body{background:var(--bg);color:var(--text);font-family:"Hiragino Kaku Gothic Pro","Meiryo",sans-serif;min-height:100vh;padding:0}
+.page{max-width:900px;margin:0 auto;padding:16px}
+h1{font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px;letter-spacing:.04em}
+.sub{font-size:10px;color:var(--text3);margin-bottom:14px}
+.tabs{display:flex;gap:4px;margin-bottom:14px}
+.tab{padding:6px 16px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);font-size:12px;cursor:pointer;transition:all .15s}
+.tab.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+.panel{display:none}.panel.active{display:block}
+
+/* ===== TABLE ===== */
+.tscroll{overflow-x:auto}
+table{border-collapse:collapse;font-size:11px;min-width:640px;width:100%}
+th,td{border:1px solid var(--border);text-align:center;padding:4px 3px}
+.rh{text-align:left!important;padding:5px 10px!important;white-space:nowrap;font-weight:600;background:var(--bg3)}
+.ch{font-size:9px;padding:5px 3px;background:var(--bg3);line-height:1.4;vertical-align:bottom}
+.sc{background:#0a3020;color:#4db87a;font-weight:700;font-size:14px}
+.sa{background:#0e2a18;color:#5DCAA5;font-size:12px}
+.se{background:#18181e;color:#6a6880;font-size:11px}
+.sd{background:#2a1e08;color:#d4922a;font-size:12px}
+.sx{background:#3a0e0e;color:#e05555;font-weight:700;font-size:14px}
+.sm{color:var(--text3);font-size:11px}
+.sh{background:var(--bg3)}
+.sn{background:var(--bg3);font-weight:600}
+.score_col{background:var(--bg3);font-weight:700;font-size:12px;min-width:46px}
+.tleg{display:flex;flex-wrap:wrap;gap:8px;font-size:10px;color:var(--text2);margin-bottom:8px;align-items:center}
+.tli{display:flex;align-items:center;gap:4px}
+.tlc{width:13px;height:13px;border-radius:2px;display:inline-block}
+.tnote{font-size:9px;color:var(--text3);margin-top:8px;line-height:1.8}
+
+/* ===== DIAGRAM ===== */
+.diag-wrap{position:relative;width:100%}
+.diag-wrap svg{display:block;width:100%;height:auto}
+.nleg{display:flex;flex-wrap:wrap;gap:10px;font-size:10px;color:var(--text2);margin-bottom:8px;align-items:center}
+.nli{display:flex;align-items:center;gap:5px}
+.nnote{font-size:9px;color:var(--text3);margin-top:6px;line-height:1.8}
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>DBFW FB09「DUAL EVOLUTION」 マッチアップ相関図</h1>
+  <p class="sub">2026/3/14 発売当日 · 理論値 + プレイヤー読み暫定版 · タップ/ホバーでハイライト</p>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('table')">📋 マッチアップ表</button>
+    <button class="tab" onclick="switchTab('diagram')">🔗 相関図</button>
+  </div>
+
+  <!-- TABLE PANEL -->
+  <div class="panel active" id="panel-table">
+    <div class="tleg">
+      <div class="tli"><span class="tlc sc"></span>◎ 有利</div>
+      <div class="tli"><span class="tlc sa"></span>○ 微有利</div>
+      <div class="tli"><span class="tlc se"></span>△ 五分</div>
+      <div class="tli"><span class="tlc sd"></span>▲ 微不利</div>
+      <div class="tli"><span class="tlc sx"></span>× 無理</div>
+      <span style="font-size:9px;color:var(--text3);margin-left:4px">スコア＝◎×2＋○×1＋▲×-1＋×× -2　/　★＝FB09新</span>
+    </div>
+    <div class="tscroll"><table id="matchup-table"></table></div>
+    <p class="tnote">対面列＝対面リーダー、行＝使用リーダー。FB09「DUAL EVOLUTION」発売当日の理論値暫定。</p>
+  </div>
+
+  <!-- DIAGRAM PANEL -->
+  <div class="panel" id="panel-diagram">
+    <div class="nleg">
+      <div class="nli"><svg width="36" height="12" overflow="visible"><path d="M0 6 Q14 6 24 6" fill="none" stroke="#4db87a" stroke-width="3"/><polygon points="24,2 33,6 24,10" fill="#4db87a"/></svg>◎ 有利</div>
+      <div class="nli"><svg width="36" height="12" overflow="visible"><path d="M0 6 Q14 6 24 6" fill="none" stroke="#5DCAA5" stroke-width="1.7"/><polygon points="24,3 32,6 24,9" fill="#5DCAA5"/></svg>○ 微有利</div>
+      <div class="nli"><svg width="36" height="12" overflow="visible"><line x1="0" y1="6" x2="33" y2="6" stroke="#5a5870" stroke-width="0.9" stroke-dasharray="5,3"/></svg>△ 五分</div>
+      <div class="nli" style="margin-left:4px"><span style="font-size:9px;font-weight:700;background:#1e2e50;color:#4a8fe8;padding:1px 5px;border-radius:3px;border:1px solid #2a4880">NEW</span>&thinsp;FB09新</div>
+      <span style="font-size:9px;color:var(--text3);margin-left:2px">矢印：有利→不利　ノード大＝スコア大　タップでハイライト</span>
+    </div>
+    <div class="diag-wrap">
+      <svg id="rsvg" viewBox="0 0 680 690">
+        <defs>
+          <marker id="mk_a" viewBox="0 0 14 10" refX="13" refY="5" markerWidth="8" markerHeight="8" orient="auto"><polygon points="0,0 14,5 0,10" fill="#4db87a"/></marker>
+          <marker id="mk_s" viewBox="0 0 11 8" refX="10" refY="4" markerWidth="6" markerHeight="6" orient="auto"><polygon points="0,0 11,4 0,8" fill="#5DCAA5"/></marker>
+        </defs>
+        <g id="gl_bg"></g>
+        <g id="gl_e"></g>
+        <g id="gl_n"></g>
+      </svg>
+    </div>
+    <p class="nnote">外周（NEW）= FB09新リーダー　内周 = 既存T1リーダー　左上バッジ = スコア（深緑:強 / 橙:五分前後 / 赤:苦）<br>FB09「DUAL EVOLUTION」2026/3/14 暫定。</p>
+  </div>
+</div>
+
+<script>
+function switchTab(t){
+  document.querySelectorAll('.tab').forEach((el,i)=>{el.classList.toggle('active',i===(t==='table'?0:1))});
+  document.querySelectorAll('.panel').forEach((el,i)=>{el.classList.toggle('active',i===(t==='table'?0:1))});
+}
+
+// ===== TABLE =====
+(function(){
+const ALL=[
+  {id:'rGB',name:'赤ゴジBR',isN:true, dot:'#e05555'},
+  {id:'yG', name:'黄ゴジータ',isN:true,dot:'#d4922a'},
+  {id:'bM', name:'青身勝手',isN:true, dot:'#4a8fe8'},
+  {id:'kGG',name:'黒ゴジGT',isN:true, dot:'#9896a8'},
+  {id:'gBS',name:'ビースト',isN:true, dot:'#4db87a'},
+  {id:'gK3',name:'悟空3',    isN:true, dot:'#9580e8'},
+  {id:'rM', name:'赤飯',    isN:false,dot:'#e05555'},
+  {id:'yBu',name:'純ブウ',  isN:false,dot:'#d4922a'},
+  {id:'gP', name:'オレピ',  isN:false,dot:'#4db87a'},
+  {id:'kBa',name:'バダック',isN:false,dot:'#9896a8'},
+  {id:'kJ', name:'Jr',      isN:false,dot:'#9896a8'},
+  {id:'yBe',name:'黄ベジ',  isN:false,dot:'#d4922a'},
+];
+const DATA={
+  rGB:{rGB:'-',yG:'E',bM:'D',kGG:'S',gBS:'E',gK3:'D',rM:'S',yBu:'A',gP:'A',kBa:'S',kJ:'S',yBe:'E'},
+  yG: {rGB:'E',yG:'-',bM:'D',kGG:'D',gBS:'S',gK3:'D',rM:'S',yBu:'S',gP:'S',kBa:'S',kJ:'A',yBe:'D'},
+  bM: {rGB:'A',yG:'A',bM:'-',kGG:'D',gBS:'X',gK3:'D',rM:'S',yBu:'A',gP:'X',kBa:'D',kJ:'D',yBe:'S'},
+  kGG:{rGB:'X',yG:'A',bM:'A',kGG:'-',gBS:'X',gK3:'D',rM:'S',yBu:'A',gP:'A',kBa:'S',kJ:'S',yBe:'A'},
+  gBS:{rGB:'E',yG:'X',bM:'S',kGG:'S',gBS:'-',gK3:'X',rM:'D',yBu:'E',gP:'S',kBa:'E',kJ:'A',yBe:'D'},
+  gK3:{rGB:'A',yG:'A',bM:'A',kGG:'A',gBS:'S',gK3:'-',rM:'S',yBu:'A',gP:'S',kBa:'S',kJ:'S',yBe:'D'},
+};
+const SCORE={rGB:8,yG:7,bM:2,kGG:6,gBS:-3,gK3:14};
+const SYM={S:'◎',A:'○',E:'△',D:'▲',X:'×','-':'─'};
+const CLS={S:'sc',A:'sa',E:'se',D:'sd',X:'sx','-':'sm'};
+let hr='<thead><tr><th class="rh sh">リーダー ↓ / 対面 →</th>';
+ALL.forEach(({name,isN,dot})=>{
+  const pts=name.match(/.{1,4}/g)||[name];
+  hr+=`<th class="ch ${isN?'sn':''}"><span style="width:7px;height:7px;border-radius:50%;background:${dot};display:inline-block;margin-bottom:2px"></span><br>${pts.join('<br>')}${isN?'<br><span style="color:#4a8fe8;font-weight:700;font-size:9px">★</span>':''}</th>`;
+});
+hr+='<th class="ch score_col">スコア</th></tr></thead><tbody>';
+['rGB','yG','bM','kGG','gBS','gK3'].forEach(rid=>{
+  const {name,dot}=ALL.find(l=>l.id===rid);
+  const sc=SCORE[rid];
+  const scC=sc>8?'#4db87a':sc>3?'#4db87a':sc>=0?'#d4922a':'#e05555';
+  hr+=`<tr><td class="rh sn"><span style="width:9px;height:9px;border-radius:50%;background:${dot};display:inline-block;margin-right:5px;vertical-align:middle"></span>${name}</td>`;
+  ALL.forEach(({id})=>{const v=DATA[rid][id]||'?';hr+=`<td class="${CLS[v]||''}">${SYM[v]||v}</td>`;});
+  hr+=`<td class="score_col" style="color:${scC}">${sc>0?'+'+sc:sc}</td></tr>`;
+});
+hr+='</tbody>';
+document.getElementById('matchup-table').innerHTML=hr;
+})();
+
+// ===== DIAGRAM =====
+(function(){
+const NS='http://www.w3.org/2000/svg';
+const svg=document.getElementById('rsvg');
+const BG=document.getElementById('gl_bg');
+const EL=document.getElementById('gl_e');
+const NL=document.getElementById('gl_n');
+const CX=340,CY=348;
+const mk=(t,a)=>{const e=document.createElementNS(NS,t);for(const[k,v]of Object.entries(a))e.setAttribute(k,v);return e;};
+const NODES=[
+  {id:'rGB',ring:'o',deg:330,label:['赤ゴジ','BR'],   fill:'#3a1515',stroke:'#e05555',score:8},
+  {id:'yG', ring:'o',deg:30, label:['黄ゴジ','ータ'], fill:'#362010',stroke:'#d4922a',score:7},
+  {id:'gBS',ring:'o',deg:90, label:['ビースト'],       fill:'#0e2a18',stroke:'#4db87a',score:-3},
+  {id:'gK3',ring:'o',deg:150,label:['悟空3'],           fill:'#1e1640',stroke:'#9580e8',score:14},
+  {id:'bM', ring:'o',deg:210,label:['青身','勝手'],    fill:'#0e2240',stroke:'#4a8fe8',score:2},
+  {id:'kGG',ring:'o',deg:270,label:['黒ゴジ','GT'],   fill:'#1a1a24',stroke:'#9896a8',score:6},
+  {id:'rM', ring:'i',deg:0,  label:['赤飯'],           fill:'#2a1212',stroke:'#e05555',score:null},
+  {id:'yBu',ring:'i',deg:60, label:['純ブウ'],         fill:'#261808',stroke:'#d4922a',score:null},
+  {id:'gP', ring:'i',deg:120,label:['オレピ'],         fill:'#0a2010',stroke:'#4db87a',score:null},
+  {id:'kBa',ring:'i',deg:180,label:['バダック'],       fill:'#18181e',stroke:'#9896a8',score:null},
+  {id:'kJ', ring:'i',deg:240,label:['Jr'],             fill:'#18181e',stroke:'#9896a8',score:null},
+  {id:'yBe',ring:'i',deg:300,label:['黄ベジ'],         fill:'#261808',stroke:'#d4922a',score:null},
+];
+const RO=238,RI=112;
+const pos={};
+NODES.forEach(({id,ring,deg})=>{
+  const r=ring==='o'?RO:RI,a=(deg-90)*Math.PI/180;
+  pos[id]=[+(CX+r*Math.cos(a)).toFixed(1),+(CY+r*Math.sin(a)).toFixed(1)];
+});
+const NR={};
+NODES.forEach(({id,score})=>{
+  NR[id]=score===null?24:Math.min(30+Math.max(score,0)*0.86,44);
+});
+[{r:RO,d:'7,5'},{r:RI,d:'3,3'}].forEach(({r,d})=>{
+  BG.appendChild(mk('circle',{cx:CX,cy:CY,r,fill:'none',stroke:'#2a2a38','stroke-width':'0.5','stroke-dasharray':d}));
+});
+[{txt:'FB09 NEW',r:RO+22,deg:300},{txt:'既存 T1',r:RI+20,deg:170}].forEach(({txt,r,deg})=>{
+  const a=(deg-90)*Math.PI/180,x=CX+r*Math.cos(a),y=CY+r*Math.sin(a);
+  const t=mk('text',{x:x.toFixed(1),y:y.toFixed(1),'text-anchor':'middle','dominant-baseline':'central','font-size':'9',fill:'#5a5870'});
+  t.textContent=txt;BG.appendChild(t);
+});
+const EDGES=[
+  ['rGB','kGG','a'],['yG','gBS','a'],
+  ['gBS','bM','a'],['gBS','kGG','a'],['gK3','gBS','a'],
+  ['bM','rGB','s'],['bM','yG','s'],
+  ['gK3','rGB','s'],['gK3','yG','s'],['gK3','bM','s'],['gK3','kGG','s'],
+  ['kGG','yG','s'],['kGG','bM','s'],
+  ['rGB','yG','e'],['rGB','gBS','e'],
+  ['rGB','rM','a'],['rGB','kBa','a'],['rGB','kJ','a'],
+  ['yG','rM','a'],['yG','yBu','a'],['yG','gP','a'],['yG','kBa','a'],
+  ['bM','rM','a'],['bM','yBe','a'],
+  ['kGG','rM','a'],['kGG','kBa','a'],['kGG','kJ','a'],
+  ['gBS','gP','a'],
+  ['gK3','rM','a'],['gK3','gP','a'],['gK3','kBa','a'],['gK3','kJ','a'],
+  ['rGB','yBu','s'],['rGB','gP','s'],
+  ['yG','kJ','s'],['bM','yBu','s'],
+  ['kGG','yBu','s'],['kGG','gP','s'],['kGG','yBe','s'],
+  ['gBS','kJ','s'],['gK3','yBu','s'],
+  ['gP','bM','a'],
+  ['kBa','bM','s'],['kJ','bM','s'],
+  ['rM','gBS','s'],['yBe','yG','s'],['yBe','gBS','s'],['yBe','gK3','s'],
+  ['rGB','yBe','e'],['gBS','yBu','e'],['gBS','kBa','e'],
+];
+const seenE=new Set();
+const dedE=EDGES.filter(([f,t,tp])=>{
+  if(tp!=='e')return true;
+  const k=[f,t].sort().join('_');
+  if(seenE.has(k))return false;
+  seenE.add(k);return true;
+});
+const eels=[];
+dedE.forEach(([fi,ti,tp])=>{
+  const[ax,ay]=pos[fi],[bx,by]=pos[ti];
+  const dx=bx-ax,dy=by-ay,di=Math.sqrt(dx*dx+dy*dy)||1,ux=dx/di,uy=dy/di;
+  const rA=NR[fi],rB=NR[ti];
+  const sx=+(ax+rA*ux).toFixed(1),sy=+(ay+rA*uy).toFixed(1);
+  const arpad=tp==='e'?0:13;
+  const ex=+(bx-(rB+arpad)*ux).toFixed(1),ey=+(by-(rB+arpad)*uy).toFixed(1);
+  const mx=(ax+bx)/2,my=(ay+by)/2;
+  const cmx=CX-mx,cmy=CY-my,cl=Math.sqrt(cmx*cmx+cmy*cmy)||1;
+  const cpx=+(mx+cmx*0.44).toFixed(1),cpy=+(my+cmy*0.44).toFixed(1);
+  let el;
+  if(tp==='e'){
+    el=mk('line',{x1:sx,y1:sy,x2:ex,y2:ey,stroke:'#3a3a50','stroke-width':'0.9',opacity:'0.3','stroke-dasharray':'5,3'});
+  } else {
+    const stroke=tp==='a'?'#4db87a':'#5DCAA5',sw=tp==='a'?3.0:1.8,op=tp==='a'?'0.75':'0.5',mkr=tp==='a'?'url(#mk_a)':'url(#mk_s)';
+    el=mk('path',{d:`M${sx} ${sy} Q${cpx} ${cpy} ${ex} ${ey}`,fill:'none',stroke,'stroke-width':sw,opacity:op,'marker-end':mkr});
+  }
+  el.dataset.f=fi;el.dataset.t=ti;
+  EL.appendChild(el);eels.push(el);
+});
+const nels={};
+NODES.forEach(({id,label,fill,stroke,score})=>{
+  const[x,y]=pos[id],r=NR[id],isN=score!==null;
+  const g=mk('g',{cursor:'pointer'});
+  if(isN){
+    g.appendChild(mk('circle',{cx:x,cy:y,r:r+13,fill,stroke,'stroke-width':'0.3',opacity:'0.15'}));
+    g.appendChild(mk('circle',{cx:x,cy:y,r:r+7,fill,stroke,'stroke-width':'0.4',opacity:'0.2'}));
+  }
+  g.appendChild(mk('circle',{cx:x,cy:y,r,fill,stroke,'stroke-width':isN?'2.5':'1.5'}));
+  label.forEach((l,i)=>{
+    const yo=label.length>1?(i===0?-7:7):0;
+    const t=mk('text',{x,y:y+yo,'text-anchor':'middle','dominant-baseline':'central',
+      'font-size':isN?(label.length>1?'11':'12'):'10','font-weight':isN?'600':'400',fill:stroke,'pointer-events':'none','font-family':'"Hiragino Kaku Gothic Pro","Meiryo",sans-serif'});
+    t.textContent=l;g.appendChild(t);
+  });
+  if(isN){
+    const bx=x+r-1,by=y-r-2;
+    g.appendChild(mk('rect',{x:bx-13,y:by-6.5,width:26,height:13,rx:3,fill:'#1e2e50',stroke:'#2a4880','stroke-width':'0.8'}));
+    const bt=mk('text',{x:bx,y:by,'text-anchor':'middle','dominant-baseline':'central','font-size':'8',fill:'#4a8fe8','font-weight':'700','pointer-events':'none'});
+    bt.textContent='NEW';g.appendChild(bt);
+    const sc=score||0;
+    const sbg=sc>8?'#0a3020':sc>3?'#0e3a20':sc>=0?'#2a1e08':'#3a0e0e';
+    const sfc=sc>8?'#4db87a':sc>3?'#4db87a':sc>=0?'#d4922a':'#e05555';
+    const sbx=x-r+1,sby=y-r-2;
+    g.appendChild(mk('circle',{cx:sbx,cy:sby,r:9.5,fill:sbg,stroke:sfc,'stroke-width':'0.8',opacity:'0.95'}));
+    const st=mk('text',{x:sbx,y:sby,'text-anchor':'middle','dominant-baseline':'central','font-size':'9',fill:sfc,'font-weight':'700','pointer-events':'none'});
+    st.textContent=sc>0?'+'+sc:sc;g.appendChild(st);
+  }
+  NL.appendChild(g);nels[id]=g;
+  const getOp=(e)=>{const s=e.getAttribute('stroke');return s==='#4db87a'?'0.75':s==='#5DCAA5'?'0.5':'0.3';};
+  const hl=()=>{
+    const lk=new Set([id]);
+    eels.forEach(e=>{
+      const h=e.dataset.f===id||e.dataset.t===id;
+      e.style.opacity=h?'1':'0.03';
+      if(h){lk.add(e.dataset.f);lk.add(e.dataset.t);}
+    });
+    Object.entries(nels).forEach(([k,v])=>v.style.opacity=lk.has(k)?'1':'0.1');
+  };
+  const rs=()=>{
+    eels.forEach(e=>e.style.opacity=getOp(e));
+    Object.values(nels).forEach(v=>v.style.opacity='1');
+  };
+  g.addEventListener('mouseenter',hl);
+  g.addEventListener('mouseleave',rs);
+  let touched=false;
+  g.addEventListener('touchstart',ev=>{ev.preventDefault();touched=true;hl();},{passive:false});
+  g.addEventListener('touchend',()=>{setTimeout(()=>{touched=false;},300)});
+  svg.addEventListener('touchstart',ev=>{if(touched)return;rs();},{passive:true});
+});
+})();
+</script>
+</body>
+</html>
